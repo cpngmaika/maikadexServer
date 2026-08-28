@@ -1,17 +1,24 @@
-const express = require("express");
-require("dotenv").config();
-require("./config/db");
+import express from "express";
+import {
+  signup_get,
+  login_get,
+  signup_post,
+  login_post,
+} from "./controllers/authControllers.js";
 
 const app = express();
 
+// Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const PORT = process.env.PORT || 3001;
+// Routes
+app.get("/signup", signup_get);
+app.get("/login", login_get);
 
-app.get("/", (req, res) => {
-    res.send("MaikaDex server is running!");
-});
+app.post("/signup", signup_post);
+app.post("/login", login_post);
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log("Server running at http://localhost:3000");
 });

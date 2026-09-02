@@ -23,6 +23,7 @@ class User {
             );
 
             return {
+                id: result.insertId,
                 _id: result.insertId,
                 email: email.toLowerCase()
             };

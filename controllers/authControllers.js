@@ -40,7 +40,8 @@ const handleErrors = (err) => {
 // create json web token
 const maxAge = 3 * 24 * 60 * 60;
 const createToken = (id) => {
-  return jwt.sign({ id }, 'net ninja secret', {
+  const secret = process.env.JWT_SECRET || 'net ninja secret';
+  return jwt.sign({ id }, secret, {
     expiresIn: maxAge
   });
 };
@@ -127,7 +128,6 @@ export const changePassword_put = async (req, res) => {
   }
 
   try {
-    // Tìm user trong database bằng MySQL thay vì Mongoose
     const [rows] = await pool.execute('SELECT * FROM users WHERE id = ?', [req.userId]);
     const user = rows[0];
 
@@ -149,7 +149,6 @@ export const changePassword_put = async (req, res) => {
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     
-    // Cập nhật mật khẩu mới vào database
     await pool.execute('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, req.userId]);
     
     res.status(200).json({

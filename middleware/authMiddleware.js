@@ -7,7 +7,8 @@ export const requireAuth = (req, res, next) => {
         return res.status(401).json({ message: 'Chưa đăng nhập' });
     }
 
-    jwt.verify(token, 'net ninja secret', (err, decodedToken) => {
+    const secret = process.env.JWT_SECRET || 'net ninja secret';
+    jwt.verify(token, secret, (err, decodedToken) => {
         if (err || !decodedToken?.id) {
             console.log(err?.message || 'Token không có user id');
             return res.status(401).json({ message: 'Token không hợp lệ hoặc đã hết hạn' });
